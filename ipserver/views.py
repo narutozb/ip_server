@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -13,4 +15,21 @@ def get_client_ip(request):
 
 
 def get_client_meta_data(request):
-    return JsonResponse({'meta': request.META})
+    result = {}
+    proxy_indicators = [
+        'HTTP_VIA',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED_FOR_IP',
+        'REMOTE_ADDR',
+    ]
+    meta = request.META
+    for i in proxy_indicators:
+        data = meta.get(i)
+        if data:
+            result[i] = data
+
+    return JsonResponse({'meta': result})
