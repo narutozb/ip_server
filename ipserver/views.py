@@ -9,5 +9,8 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')  # 获取代理IP
 
-    print(f'client_ip:{ip}')
     return JsonResponse({'ip': ip})
+
+
+def get_client_meta_data(request):
+    return JsonResponse({'meta': request.META})
